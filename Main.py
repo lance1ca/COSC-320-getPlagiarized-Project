@@ -1,3 +1,71 @@
+import pandas as pd
+import os
+import unicodedata
+import emoji
+
+
+def initializeData():
+    cwd = os.getcwd()
+
+    # Print the current working directory
+    print("Current working directory:", cwd)
+
+    # Set the folder path
+    folder_path = './data'
+
+    # Get a list of all CSV files in the folder
+    csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+
+    # Initialize an empty dataframe
+    df = pd.DataFrame()
+
+    # Loop through the CSV files and read them into temporary dataframes
+    for csv_file in csv_files:
+        temp_df = pd.read_csv(os.path.join(folder_path, csv_file),usecols=[0,1,3])
+        df = pd.concat([df, temp_df], ignore_index=True)
+   
+
+   #TO DO: ADD IN ERROR CHECKING IN CASE WE FORGET TO DELETE FILE
+
+
+    df.to_csv('./data/COMBINED.csv', index=False)
+    initializePlagiarizedData()
+
+def initializePlagiarizedData():
+
+
+    combinedDF = pd.read_csv("./data/COMBINED.csv")
+    tenPercentOfSize = (int) (0.1 * len(combinedDF))
+    plagiarizedDF = combinedDF.sample(n=tenPercentOfSize)
+    print(tenPercentOfSize)
+    plagiarizedDF.to_csv('./data/PLAGIARIZED.csv', index=False)
+
+
+
+def checkForPlagiarism(version):
+    combinedDF = pd.read_csv("./data/COMBINED.csv",encoding='utf-8')
+    plagiarizedDF = pd.read_csv("./data/PLAGIARIZED.csv",encoding='utf-8')
+
+
+    if(version == "KMP"):
+        for index, plagiarizedRow in plagiarizedDF.iterrows():
+            for index, originalRow in combinedDF.iterrows():
+                    try:
+                        print(plagiarizedRow['content'])
+                        print(originalRow['content'])
+                        matched = KMPSearch(plagiarizedRow['content'],originalRow['content'])
+                        # if(matched):
+                        #     print("Original text from {}, with requestId = {}, text = {}: ".format(originalRow['userName'],originalRow['requestId'],originalRow['content']))
+                        #     print("Plagiarized text from {}, with requestId = {}, text = {}: ".format(plagiarizedRow['userName'],plagiarizedRow['requestId'],plagiarizedRow['content']))
+                        #     print("\n")
+                    except:
+                        print(":(")
+                    
+#\U0001f60a
+
+
+
+count =0
 # **** PLEASE READ ****
 # Python3 program for KMP Algorithm
 # This code is contributed by Bhavya Jain
@@ -30,6 +98,8 @@ def KMPSearch(pat, txt):
  
     i = 0  # index for txt[]
 
+    isMatched = False
+
     #While the length of the text being scanned minus i is greater than or equal to the length of the pattern minus j
     #Do this.
     while (N - i) >= (M - j):
@@ -42,9 +112,13 @@ def KMPSearch(pat, txt):
         #If j has reached the size of M (i.e, j has continually been incremented such that it has reached the entire pattern)
         #Then we print out the pattern found at index (i-j), and set j to be lps[j-1]
         if j == M:
-            print("Found pattern at index " + str(i-j))
+            #print("Found pattern at index " + str(i-j))
             #ADD PRINT STATEMENTS AND COUNT
+            global count 
+            count += 1
+            print("DETECTION #", count)
             j = lps[j-1]
+            isMatched = True
  
         # mismatch after j matches
         #OTHERWISE, if i is LESS than the size of the text being scanned (not done yet) AND the pattern at index j and text at index i DO NOT match
@@ -59,6 +133,8 @@ def KMPSearch(pat, txt):
             #Otherwise, increment i and repeat
             else:
                 i += 1
+    
+    return isMatched
  
 
 
@@ -99,8 +175,17 @@ def computeLPSArray(pat, M, lps):
             else:
                 lps[i] = 0
                 i += 1
- 
-txt = "ABABDABACDABABCABAB"
-pat = "ABABCABAB"
-KMPSearch(pat, txt)
- 
+
+if os.path.exists("./data/COMBINED.csv"):
+    os.remove("./data/COMBINED.csv")
+
+if os.path.exists("./data/PLAGIARIZED.csv"):
+    os.remove("./data/PLAGIARIZED.csv")
+
+
+initializeData()
+checkForPlagiarism("KMP")
+print("COUNT IS: ", count)
+
+os.remove("./data/COMBINED.csv")
+os.remove("./data/PLAGIARIZED.csv")
