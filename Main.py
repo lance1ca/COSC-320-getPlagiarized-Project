@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import unicodedata
 import emoji
+import time
+import traceback
 
 
 def initializeData():
@@ -11,7 +13,7 @@ def initializeData():
     print("Current working directory:", cwd)
 
     # Set the folder path
-    folder_path = './data'
+    folder_path = './test'
 
     # Get a list of all CSV files in the folder
     csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
@@ -21,8 +23,12 @@ def initializeData():
 
     # Loop through the CSV files and read them into temporary dataframes
     for csv_file in csv_files:
-        temp_df = pd.read_csv(os.path.join(folder_path, csv_file),usecols=[0,1,3])
-        df = pd.concat([df, temp_df], ignore_index=True)
+        try:
+            temp_df = pd.read_csv(os.path.join(folder_path, csv_file),usecols=[0,1,3],encoding='utf-8')
+            df = pd.concat([df, temp_df], ignore_index=True)
+        except Exception as e:
+            print("Issue reading file with name: ", csv_file)
+            #traceback.print_exc()
    
 
    #TO DO: ADD IN ERROR CHECKING IN CASE WE FORGET TO DELETE FILE
@@ -34,7 +40,7 @@ def initializeData():
 def initializePlagiarizedData():
 
 
-    combinedDF = pd.read_csv("./data/COMBINED.csv")
+    combinedDF = pd.read_csv("./data/COMBINED.csv",encoding='utf-8')
     tenPercentOfSize = (int) (0.1 * len(combinedDF))
     plagiarizedDF = combinedDF.sample(n=tenPercentOfSize)
     print(tenPercentOfSize)
@@ -51,15 +57,22 @@ def checkForPlagiarism(version):
         for index, plagiarizedRow in plagiarizedDF.iterrows():
             for index, originalRow in combinedDF.iterrows():
                     try:
-                        print(plagiarizedRow['content'])
-                        print(originalRow['content'])
+                        currOriginalUserName = originalRow['userName']
+                        currOriginalRequestId = originalRow['reviewId']
+                        currOriginalContent = originalRow['content']
+
+                        currPlagiarizedRowUserName = plagiarizedRow['userName']
+                        currPlagiarizedRequestId = plagiarizedRow['reviewId']
+                        currPlagiarizedContent = plagiarizedRow['content']
+                        
                         matched = KMPSearch(plagiarizedRow['content'],originalRow['content'])
-                        # if(matched):
-                        #     print("Original text from {}, with requestId = {}, text = {}: ".format(originalRow['userName'],originalRow['requestId'],originalRow['content']))
-                        #     print("Plagiarized text from {}, with requestId = {}, text = {}: ".format(plagiarizedRow['userName'],plagiarizedRow['requestId'],plagiarizedRow['content']))
-                        #     print("\n")
+
+                        if(matched):
+                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currOriginalUserName,currOriginalRequestId,currOriginalContent))
+                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currPlagiarizedRowUserName,currPlagiarizedRequestId,currPlagiarizedContent))
+                            print("\n")
                     except:
-                        print(":(")
+                        print("An Error Occurred :(")
                     
 #\U0001f60a
 
@@ -182,10 +195,14 @@ if os.path.exists("./data/COMBINED.csv"):
 if os.path.exists("./data/PLAGIARIZED.csv"):
     os.remove("./data/PLAGIARIZED.csv")
 
-
+start_time = time.time()
 initializeData()
 checkForPlagiarism("KMP")
+
+end_time = time.time()
 print("COUNT IS: ", count)
+elapsed_time = end_time - start_time
+print("Elapsed time: {:.2f} seconds".format(elapsed_time))
 
 os.remove("./data/COMBINED.csv")
 os.remove("./data/PLAGIARIZED.csv")
