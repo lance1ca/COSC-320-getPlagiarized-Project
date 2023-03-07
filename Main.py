@@ -4,7 +4,10 @@ import unicodedata
 import emoji
 import time
 import traceback
+import matplotlib.pyplot as plt
 
+
+elapsed_times = []
 
 def initializeData():
     cwd = os.getcwd()
@@ -32,19 +35,22 @@ def initializeData():
    
 
    #TO DO: ADD IN ERROR CHECKING IN CASE WE FORGET TO DELETE FILE
-
-
     df.to_csv('./data/COMBINED.csv', index=False)
-    initializePlagiarizedData()
+   
 
-def initializePlagiarizedData():
+def initializePlagiarizedData(percentage):
 
-
+   
     combinedDF = pd.read_csv("./data/COMBINED.csv",encoding='utf-8')
-    tenPercentOfSize = (int) (0.1 * len(combinedDF))
-    plagiarizedDF = combinedDF.sample(n=tenPercentOfSize)
-    print(tenPercentOfSize)
+    # n_values = [0.001, 0.002]
+
+        
+    #tenPercentOfSize = (int) (percentage * len(combinedDF))
+    plagiarizedDF = combinedDF.sample(n=percentage)
     plagiarizedDF.to_csv('./data/PLAGIARIZED.csv', index=False)
+
+    return percentage * len(combinedDF)
+        
 
 
 
@@ -54,8 +60,11 @@ def checkForPlagiarism(version):
 
 
     if(version == "KMP"):
+        global start_plot_time
+        start_plot_time = time.perf_counter()
         for index, plagiarizedRow in plagiarizedDF.iterrows():
             for index, originalRow in combinedDF.iterrows():
+                    
                     try:
                         currOriginalUserName = originalRow['userName']
                         currOriginalRequestId = originalRow['reviewId']
@@ -71,8 +80,14 @@ def checkForPlagiarism(version):
                             print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currOriginalUserName,currOriginalRequestId,currOriginalContent))
                             print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currPlagiarizedRowUserName,currPlagiarizedRequestId,currPlagiarizedContent))
                             print("\n")
+
                     except:
                         print("An Error Occurred :(")
+        global end_plot_time
+        end_plot_time = time.perf_counter()
+        global elapsed_times
+        elapsed_time = end_plot_time - start_plot_time
+        elapsed_times.append(elapsed_time)
                     
 #\U0001f60a
 
@@ -197,12 +212,28 @@ if os.path.exists("./data/PLAGIARIZED.csv"):
 
 start_time = time.time()
 initializeData()
-checkForPlagiarism("KMP")
+
+n_percent_values = [10,20,30,40,50,60,70,80]
+n_values = []
+
+
+for n in n_percent_values:
+    n_values.append(initializePlagiarizedData(n))
+    checkForPlagiarism("KMP")
+    os.remove("./data/PLAGIARIZED.csv")
 
 end_time = time.time()
 print("COUNT IS: ", count)
 elapsed_time = end_time - start_time
 print("Elapsed time: {:.2f} seconds".format(elapsed_time))
+
+    
+# Plot the results
+plt.plot(n_percent_values, elapsed_times, 'bo-')
+plt.xlabel('Input size n')
+plt.ylabel('Runtime (seconds)')
+plt.title('Runtime of Plagiarism Algorithm')
+plt.show()
 
 os.remove("./data/COMBINED.csv")
 os.remove("./data/PLAGIARIZED.csv")
