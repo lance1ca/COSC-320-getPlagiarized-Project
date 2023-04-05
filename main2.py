@@ -108,7 +108,7 @@ def checkForPlagiarism(version):
                             print("\n")
 
                     except Exception as e:
-                        # print("An Error Occurred :(")
+                        print("An Error Occurred :(")
                         print(e)
                         #traceback.print_exc()
                         
@@ -275,9 +275,9 @@ if os.path.exists("./data/PLAGIARIZED.csv"):
 start_time = time.time()
 initializeData()
 
-n_percent_values = [0.1,0.15,0.2,0.25,0.3]
+n_percent_values = [0.1,0.2,0.3,0.4,0.5]
 n_values = []
-version = "rk"                                                 #change
+version = "KMP"                                                 #change
 
 for n in n_percent_values:
     n_values.append(initializePlagiarizedData(n))
