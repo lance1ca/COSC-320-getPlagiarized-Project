@@ -43,7 +43,7 @@ def initializePlagiarizedData(percentage):
    
     combinedDF = pd.read_csv("./data/COMBINED.csv",encoding='utf-8')
     percentOfSize = (int) (percentage * len(combinedDF))
-    plagiarizedDF = combinedDF.sample(n=percentOfSize)
+    plagiarizedDF = combinedDF.sample(n=percentOfSize).sort_index()
     plagiarizedDF.to_csv('./data/PLAGIARIZED.csv', index=False)
 
     return percentage * len(combinedDF)
@@ -57,7 +57,7 @@ def checkForPlagiarism(version):
     combinedDF = combinedDF.to_dict('records')
     plagiarizedDF = plagiarizedDF.to_dict('records')
 
-
+    global errcount 
     global start_plot_time
     start_plot_time = time.perf_counter()
     if(version == "rk"):
@@ -65,25 +65,27 @@ def checkForPlagiarism(version):
             for originalRow in combinedDF:
                     
                     try:
-                        currOriginalUserName = originalRow['userName']
-                        currOriginalRequestId = originalRow['reviewId']
-                        currOriginalContent = originalRow['content']
+                        # currOriginalUserName = originalRow['userName']
+                        # currOriginalRequestId = originalRow['reviewId']
+                        # currOriginalContent = originalRow['content']
 
-                        currPlagiarizedRowUserName = plagiarizedRow['userName']
-                        currPlagiarizedRequestId = plagiarizedRow['reviewId']
-                        currPlagiarizedContent = plagiarizedRow['content']
+                        # currPlagiarizedRowUserName = plagiarizedRow['userName']
+                        # currPlagiarizedRequestId = plagiarizedRow['reviewId']
+                        # currPlagiarizedContent = plagiarizedRow['content']
                         
                         matched = RabinKarpAlgo(plagiarizedRow['content'],originalRow['content'],101)
 
                         if(matched):
-                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currOriginalUserName,currOriginalRequestId,currOriginalContent))
-                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currPlagiarizedRowUserName,currPlagiarizedRequestId,currPlagiarizedContent))
+                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['reviewId'],originalRow['content']))
+                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['reviewId'],plagiarizedRow['content']))
                             print("\n")
                             
 
                     except Exception as e:
                         # print("An Error Occurred :(")
-                        print(e)
+                        # print(e)
+                        
+                        errcount += 1
                         #traceback.print_exc()
                         
     if(version == "KMP"):
@@ -92,19 +94,19 @@ def checkForPlagiarism(version):
             for originalRow in combinedDF:
                     
                     try:
-                        currOriginalUserName = originalRow['userName']
-                        currOriginalRequestId = originalRow['reviewId']
-                        currOriginalContent = originalRow['content']
+                        # currOriginalUserName = originalRow['userName']
+                        # currOriginalRequestId = originalRow['reviewId']
+                        # currOriginalContent = originalRow['content']
 
-                        currPlagiarizedRowUserName = plagiarizedRow['userName']
-                        currPlagiarizedRequestId = plagiarizedRow['reviewId']
-                        currPlagiarizedContent = plagiarizedRow['content']
+                        # currPlagiarizedRowUserName = plagiarizedRow['userName']
+                        # currPlagiarizedRequestId = plagiarizedRow['reviewId']
+                        # currPlagiarizedContent = plagiarizedRow['content']
                         
                         matched = KMPSearch(plagiarizedRow['content'],originalRow['content'])
 
                         if(matched):
-                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currOriginalUserName,currOriginalRequestId,currOriginalContent))
-                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(currPlagiarizedRowUserName,currPlagiarizedRequestId,currPlagiarizedContent))
+                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['reviewId'],originalRow['content']))
+                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['reviewId'],plagiarizedRow['content']))
                             print("\n")
 
                     except Exception as e:
@@ -277,8 +279,9 @@ initializeData()
 
 n_percent_values = [0.1,0.2,0.3,0.4,0.5]
 n_values = []
-version = "KMP"                                                 #change
-
+# version = "rk"                                                 #change  ***IMPORTANT***
+version = "KMP"                                                 #change  ***IMPORTANT***
+errcount = 0
 for n in n_percent_values:
     n_values.append(initializePlagiarizedData(n))
     checkForPlagiarism(version)                                          
@@ -289,6 +292,8 @@ end_time = time.time()
 print("COUNT IS: ", count)
 
 elapsed_time = end_time - start_time
+if version == "rk":
+    print("the error count is " + str(errcount))
 
 print("Elapsed time: {:.2f} seconds".format(elapsed_time))
 
