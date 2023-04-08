@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import time
 
 #Global Variables:
 allDataDF = pd.DataFrame()
@@ -7,12 +8,17 @@ sampleDataDF = pd.DataFrame()
 
 dataFolderPath = ""
 allDataFileName = 'masterData.csv'
+sampleDataFileName = 'sampleData.csv'
 
 def plotResults():
     print("print results")
 
 def createSampleCSV():
-    print("create sample csv")
+    global allDataDF
+    global sampleDataDF
+    print("creating sample csv")
+    sampleDataDF = allDataDF.sample(frac=0.2)
+    sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
 
 def checkForPlagiarism():
@@ -37,6 +43,11 @@ def createCombinedCSV():
 
 def runPlagiarismDetector():
     global dataFolderPath
+    global allDataFileName
+    global sampleDataFileName
+
+    global allDataDF
+    global sampleDataDF
 
     # Get the current operating system
     if os.name == 'nt':  # Windows
@@ -49,12 +60,21 @@ def runPlagiarismDetector():
     #Create the combined csv file if it does not exist
     if (not (os.path.exists(os.path.join(dataFolderPath,allDataFileName)))):
         createCombinedCSV()
+    else:
+        print("Reading "+allDataFileName+" into data frame.")
+        allDataDF = pd.read_csv(os.path.join(dataFolderPath,allDataFileName),encoding='utf-8')
+
+    if (not (os.path.exists(os.path.join(dataFolderPath,sampleDataFileName)))):
+        createSampleCSV()
+    else:
+        print("Reading " + sampleDataFileName + " into data frame.")
+        sampleDataDF = pd.read_csv(os.path.join(dataFolderPath,sampleDataFileName),encoding='utf-8')
     
-    #Create the temporary csv to check fo plagiarism
-    createSampleCSV()
+    
     checkForPlagiarism()
     plotResults()
 
 
 #Run Detector
 runPlagiarismDetector()
+print(allDataDF)
