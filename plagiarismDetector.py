@@ -23,9 +23,18 @@ def createSampleCSV():
     sampleDataDF = allDataDF.sample(frac=0.2)
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
+def iterateCombinedRow(sampleRow, combinedRow):
+    print("\n-------------------------------------------------------\n")
+    print(sampleRow[2])
+    print(combinedRow[2]) 
+    print("\n-------------------------------------------------------\n")
+
+def iterateSampleRow(sampleRow):
+    allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow),axis=1)
 
 def checkForPlagiarism():
     print("Checking for Plagiarism.")
+    sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow),axis=1)
     
 
 
