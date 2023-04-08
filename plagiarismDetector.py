@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import time
+import threading
 
 #Global Variables:
 allDataDF = pd.DataFrame()
@@ -23,18 +24,36 @@ def createSampleCSV():
     sampleDataDF = allDataDF.sample(frac=0.2)
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
-def iterateCombinedRow(sampleRow, combinedRow):
-    print("\n-------------------------------------------------------\n")
-    print(sampleRow[2])
-    print(combinedRow[2]) 
-    print("\n-------------------------------------------------------\n")
+def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
+    print("-------------------------------------")
+    print(algorithmType +": \n")
+    print(sampleRow)
+    print(combinedRow)
+    print("-------------------------------------")
+    # runKMP(sampleRow,combinedRow)
+    # runLCSS(sampleRow,combinedRow)
+    # runRabinKarp(sampleRow,combinedRow)
 
-def iterateSampleRow(sampleRow):
-    allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow),axis=1)
+def iterateSampleRow(sampleRow,algorithmType):
+    allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow,algorithmType),axis=1)
+
+def startCheck(algorithmType):
+    sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
 
 def checkForPlagiarism():
     print("Checking for Plagiarism.")
-    sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow),axis=1)
+    threadOne = threading.Thread(target=startCheck, args=("KMP",))
+    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
+    threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
+
+    threadOne.start()
+    threadTwo.start()
+    threadThree.start()
+
+    threadOne.join()
+    threadTwo.join()
+    threadThree.join()
+    
     
 
 
