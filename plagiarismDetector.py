@@ -14,7 +14,7 @@ sampleDataDF = pd.DataFrame()
 
 dataFolderPath = ""
 allDataFileName = 'masterData.csv'
-sampleDataFileName = 'sampleData.csv'
+sampleDataFileName = 'sampleDataa.csv'
 
 kmp = KMP()
 lcss = LCSS()
@@ -58,15 +58,15 @@ def startCheck(algorithmType):
 def checkForPlagiarism():
     print("Checking for Plagiarism.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
+    #threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
     threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
     threadOne.start()
-    threadTwo.start()
+    #threadTwo.start()
     threadThree.start()
 
     threadOne.join()
-    threadTwo.join()
+    #threadTwo.join()
     threadThree.join()
 
 def createCombinedCSV():
@@ -95,7 +95,7 @@ def plagiarismDetectorInitialization():
     global sampleDataDF
 
     if os.name == 'nt':  # Windows
-        dataFolderPath = '.\\data'   # Use backslash for Windows
+        dataFolderPath = '.\\test'   # Use backslash for Windows
     else:  # Mac or Linux
         dataFolderPath = './data'   # Use forward slash for Mac or Linux
 
