@@ -3,6 +3,11 @@ import os
 import time
 import threading
 
+#Importing Algorithm Classes
+from KMP import KMP
+from LCSS import LCSS
+from RabinKarp import RabinKarp
+
 #Global Variables:
 allDataDF = pd.DataFrame()
 sampleDataDF = pd.DataFrame()
@@ -10,6 +15,10 @@ sampleDataDF = pd.DataFrame()
 dataFolderPath = ""
 allDataFileName = 'masterData.csv'
 sampleDataFileName = 'sampleData.csv'
+
+kmp = KMP()
+lcss = LCSS()
+rabinKarp = RabinKarp()
 
 
 
@@ -25,12 +34,12 @@ def createSampleCSV():
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
 def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
-    print("-------------------------------------")
-    print(algorithmType +": \n")
-    print(sampleRow)
-    print(combinedRow)
-    print("-------------------------------------")
-    # runKMP(sampleRow,combinedRow)
+    # print("-------------------------------------")
+    # print(algorithmType +": \n")
+    # print(sampleRow)
+    # print(combinedRow)
+    # print("-------------------------------------")
+    kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
     # runLCSS(sampleRow,combinedRow)
     # runRabinKarp(sampleRow,combinedRow)
 
@@ -43,16 +52,16 @@ def startCheck(algorithmType):
 def checkForPlagiarism():
     print("Checking for Plagiarism.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
-    threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
+    # threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
+    # threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
     threadOne.start()
-    threadTwo.start()
-    threadThree.start()
+    # threadTwo.start()
+    # threadThree.start()
 
     threadOne.join()
-    threadTwo.join()
-    threadThree.join()
+    # threadTwo.join()
+    # threadThree.join()
     
     
 
