@@ -23,6 +23,9 @@ rabinKarp = RabinKarp()
 
 inputSizes = []
 elapsedTimes = []
+KMPElapsedTimes = []
+LCSSElapsedTimes = []
+RabinKarpElapsedTimes = []
 
 
 
@@ -30,12 +33,32 @@ elapsedTimes = []
 def plotResults():
     global inputSizes
     global elapsedTimes
+
+
     print(inputSizes)
-    print(elapsedTimes)
-    plt.plot(inputSizes, elapsedTimes, 'bo-')
+    print(KMPElapsedTimes)
+    plt.plot(inputSizes, KMPElapsedTimes, 'bo-')
     plt.xlabel('Input size n')
     plt.ylabel('Runtime (seconds)')
-    plt.title('Runtime of Plagiarism Algorithm')
+    plt.title('Runtime of KMP Algorithm')
+    plt.show()
+
+
+    print(inputSizes)
+    print(LCSSElapsedTimes)
+    plt.plot(inputSizes, LCSSElapsedTimes, 'bo-')
+    plt.xlabel('Input size n')
+    plt.ylabel('Runtime (seconds)')
+    plt.title('Runtime of LCSS Algorithm')
+    plt.show()
+
+
+    print(inputSizes)
+    print(RabinKarpElapsedTimes)
+    plt.plot(inputSizes, RabinKarpElapsedTimes, 'bo-')
+    plt.xlabel('Input size n')
+    plt.ylabel('Runtime (seconds)')
+    plt.title('Runtime of Rabin-Karp Algorithm')
     plt.show()
 
 def createSampleCSV(n):
@@ -71,19 +94,44 @@ def startCheck(algorithmType):
     sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
 
 def checkForPlagiarism(n):
+    global KMPElapsedTimes
+    global LCSSElapsedTimes
+    global RabinKarpElapsedTimes
+
     print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
     #threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
     #threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
+    threadOneStartTime = time.time()
     threadOne.start()
-    #threadTwo.start()
-    #threadThree.start()
+
+    # threadTwoStartTime = time.time()
+    # threadTwo.start()
+
+    # threadThreeStartTime = time.time()
+    # threadThree.start()
 
     
     threadOne.join()
-    #threadTwo.join()
-    #threadThree.join()
+    threadOneEndTime = time.time()
+    
+    # threadTwoEndTime = time.time()
+    # threadTwo.join()
+
+    # threadThreeEndTime = time.time()
+    # threadThree.join()
+
+    threadOneElapsedTime = threadOneEndTime - threadOneStartTime
+    KMPElapsedTimes.append(threadOneElapsedTime)
+
+    # threadTwoElapsedTime = threadTwoEndTime - threadTwoStartTime
+    # KMPElapsedTimes.append(threadTwoElapsedTime)
+
+    # threadThreeElapsedTime = threadThreeEndTime - threadThreeStartTime
+    # KMPElapsedTimes.append(threadThreeElapsedTime)
+
+
 
 def createCombinedCSV():
     global allDataDF
@@ -145,17 +193,14 @@ def runPlagiarismDetector():
     nPercentages = [0.1,0.2,0.3,0.4,0.5]
 
     for n in nPercentages:
-        start_time = time.time()
         plagiarismDetectorInitialization(n)
         checkForPlagiarism(n)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        elapsedTimes.append(elapsed_time)
         os.remove(os.path.join(dataFolderPath,sampleDataFileName))
     
     
 
     plotResults()
+    #plotCombinedResults()
 
 
 #Run Detector
