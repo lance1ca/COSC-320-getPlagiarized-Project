@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import time
 import threading
+import matplotlib.pyplot as plt
 
 #Importing Algorithm Classes
 from KMP import KMP
@@ -20,17 +21,31 @@ kmp = KMP()
 lcss = LCSS()
 rabinKarp = RabinKarp()
 
+inputSizes = []
+elapsedTimes = []
+
+
 
 
 def plotResults():
-    print("Printing results")
+    global inputSizes
+    global elapsedTimes
+    print(inputSizes)
+    print(elapsedTimes)
+    plt.plot(inputSizes, elapsedTimes, 'bo-')
+    plt.xlabel('Input size n')
+    plt.ylabel('Runtime (seconds)')
+    plt.title('Runtime of Plagiarism Algorithm')
+    plt.show()
 
-def createSampleCSV():
+def createSampleCSV(n):
     global allDataDF
     global sampleDataDF
     global sampleDataFileName
+    global inputSizes
     print("Creating "+ sampleDataFileName +" now.")
-    sampleDataDF = allDataDF.sample(frac=0.2)
+    sampleDataDF = allDataDF.sample(frac=n)
+    inputSizes.append(sampleDataDF.shape[0])
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
 def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
@@ -55,8 +70,8 @@ def iterateSampleRow(sampleRow,algorithmType):
 def startCheck(algorithmType):
     sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
 
-def checkForPlagiarism():
-    print("Checking for Plagiarism.")
+def checkForPlagiarism(n):
+    print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
     #threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
     #threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
@@ -65,6 +80,7 @@ def checkForPlagiarism():
     #threadTwo.start()
     #threadThree.start()
 
+    
     threadOne.join()
     #threadTwo.join()
     #threadThree.join()
@@ -84,7 +100,7 @@ def createCombinedCSV():
                     print(currentFile + " has some empty values or columns. Skipping file.")
     allDataDF.to_csv(os.path.join(dataFolderPath,allDataFileName), index=False)
 
-def plagiarismDetectorInitialization():
+def plagiarismDetectorInitialization(n):
 
     print("Starting Plagiarism Detector initialization.")
     global dataFolderPath
@@ -108,21 +124,37 @@ def plagiarismDetectorInitialization():
         print("Reading "+allDataFileName+" into data frame.")
         allDataDF = pd.read_csv(os.path.join(dataFolderPath,allDataFileName),encoding='utf-8')
 
-    if (not (os.path.exists(os.path.join(dataFolderPath,sampleDataFileName)))):
-        print("Sample CSV file "+ sampleDataFileName + " does not exist.")
-        createSampleCSV()
-    else:
-        print(sampleDataFileName + " exists.")
-        print("Reading " + sampleDataFileName + " into data frame.")
-        sampleDataDF = pd.read_csv(os.path.join(dataFolderPath,sampleDataFileName),encoding='utf-8')
+    if (os.path.exists(os.path.join(dataFolderPath,sampleDataFileName))):
+        os.remove(os.path.join(dataFolderPath,sampleDataFileName))
+        #print("Sample CSV file "+ sampleDataFileName + " does not exist.")
+    createSampleCSV(n)
+    # else:
+    #     print(sampleDataFileName + " exists.")
+    #     print("Reading " + sampleDataFileName + " into data frame.")
+    #     sampleDataDF = pd.read_csv(os.path.join(dataFolderPath,sampleDataFileName),encoding='utf-8')
     
     print("Plagiarism Detector initialization complete.")
 
 
 def runPlagiarismDetector():
+    global dataFolderPath
+    global sampleDataFileName
+    global elapsedTimes
     print("Starting Plagiarism Detector.")
-    plagiarismDetectorInitialization()
-    checkForPlagiarism()
+
+    nPercentages = [0.1,0.2,0.3,0.4,0.5]
+
+    for n in nPercentages:
+        start_time = time.time()
+        plagiarismDetectorInitialization(n)
+        checkForPlagiarism(n)
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        elapsedTimes.append(elapsed_time)
+        os.remove(os.path.join(dataFolderPath,sampleDataFileName))
+    
+    
+
     plotResults()
 
 
