@@ -1,6 +1,8 @@
 
 
 class LCSS:
+
+    count =0
     def __init__(self):
         pass
     
@@ -19,4 +21,10 @@ class LCSS:
                 else:
                     L[i][j] = max(L[i - 1][j], L[i][j - 1])
 
-        return L[m][n]
+        print("--------------------------------------\n")
+        self.count += 1
+        print("LCSS Detection #", self.count)
+        print("Original Text: " + str1 + "\n")
+        print("Plagiarized Text: " + str2 + "\n")
+        print("--------------------------------------")
+        # return L[m][n]

@@ -1,6 +1,7 @@
 #ADD IN ATTRIBUTION TO CODE
 
 class RabinKarp:
+    count =0
     def __init__(self):
         pass
     
@@ -29,7 +30,12 @@ class RabinKarp:
                     else:
                         j += 1
                 if j == M:
-                    print("A Pattern has been found at index " + str(i))
+                    print("--------------------------------------\n")
+                    self.count += 1
+                    print("Rabin-Karp Detection #", self.count)
+                    print("Original Text: " + text + "\n")
+                    print("Plagiarized Text: " + pattern + "\n")
+                    print("--------------------------------------")
             if i < N-M:
                 textHashValue = (numOfInputChars*(textHashValue-ord(text[i])*h) + ord(text[i+M])) % primeNum
                 if textHashValue < 0:

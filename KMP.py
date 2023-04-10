@@ -49,9 +49,9 @@ class KMP:
             #If j has reached the size of M (i.e, j has continually been incremented such that it has reached the entire pattern)
             #Then we print out the pattern found at index (i-j), and set j to be lps[j-1]
             if j == M:
-                print("--------------------------------------")
+                print("--------------------------------------\n")
                 self.count += 1
-                print("DETECTION #", self.count)
+                print("KMP Detection #", self.count)
                 print("Original Text: " + txt + "\n")
                 print("Plagiarized Text: " + pat + "\n")
                 print("--------------------------------------")

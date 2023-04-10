@@ -39,9 +39,15 @@ def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
     # print(sampleRow)
     # print(combinedRow)
     # print("-------------------------------------")
-    kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
-    # runLCSS(sampleRow,combinedRow)
-    # runRabinKarp(sampleRow,combinedRow)
+    
+    if algorithmType == "KMP":
+        kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
+    elif algorithmType == "LCSS":
+        lcss.LCSS(str(sampleRow[2]), str(combinedRow[2]))
+    elif algorithmType == "Rabin-Karp":
+        rabinKarp.RabinKarpAlgo(str(sampleRow[2]), str(combinedRow[2]))
+    else:
+        print("Algorithm type passed was invalid")
 
 def iterateSampleRow(sampleRow,algorithmType):
     allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow,algorithmType),axis=1)
@@ -52,19 +58,16 @@ def startCheck(algorithmType):
 def checkForPlagiarism():
     print("Checking for Plagiarism.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    # threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
-    # threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
+    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
+    threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
     threadOne.start()
-    # threadTwo.start()
-    # threadThree.start()
+    threadTwo.start()
+    threadThree.start()
 
     threadOne.join()
-    # threadTwo.join()
-    # threadThree.join()
-    
-    
-
+    threadTwo.join()
+    threadThree.join()
 
 def createCombinedCSV():
     global allDataDF
