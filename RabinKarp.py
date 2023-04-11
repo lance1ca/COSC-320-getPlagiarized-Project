@@ -1,7 +1,11 @@
-#ADD IN ATTRIBUTION TO CODE
+# Following program is the python implementation of
+# Rabin Karp Algorithm given in CLRS book
+# This code is contributed by Bhavya Jain
+#https://www.geeksforgeeks.org/rabin-karp-algorithm-for-pattern-searching/
+# This code is contributed by Bhavya Jain
 
 class RabinKarp:
-    count =0
+    count = 0
     def __init__(self):
         pass
     
@@ -14,6 +18,12 @@ class RabinKarp:
         h = 1
         j = 0
         i = 0
+
+        if M > N:
+            patternSubstring = pattern[0:N]
+            pattern = patternSubstring
+            M = N
+
     
         for i in range(M-1):
             h = (h*numOfInputChars) % primeNum

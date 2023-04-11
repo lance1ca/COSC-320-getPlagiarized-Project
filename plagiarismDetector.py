@@ -80,15 +80,13 @@ def plotResults():
     # Set x and y axis labels and title
     plt.xlabel('Input size n')
     plt.ylabel('Runtime (seconds)')
-    plt.title('Runtime of Plagiarism Detection Algorithms')
+    plt.title('Runtime of All Plagiarism Detection Algorithms')
 
     # Add a legend
     plt.legend()
 
     # Show the merged plot
     plt.show()
-
-
 
 
 def createSampleCSV(n):
@@ -131,7 +129,7 @@ def checkForPlagiarism(n):
     print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
     threadTwo = threading.Thread(target=startCheck, args=("KMP",))
-    threadThree = threading.Thread(target=startCheck, args=("KMP",))
+    threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
     threadOneStartTime = time.time()
     threadOne.start()
@@ -204,12 +202,11 @@ def plagiarismDetectorInitialization(n):
 
     if (os.path.exists(os.path.join(dataFolderPath,sampleDataFileName))):
         os.remove(os.path.join(dataFolderPath,sampleDataFileName))
-        #print("Sample CSV file "+ sampleDataFileName + " does not exist.")
+    
+    
+    
     createSampleCSV(n)
-    # else:
-    #     print(sampleDataFileName + " exists.")
-    #     print("Reading " + sampleDataFileName + " into data frame.")
-    #     sampleDataDF = pd.read_csv(os.path.join(dataFolderPath,sampleDataFileName),encoding='utf-8')
+
     
     print("Plagiarism Detector initialization complete.")
 
@@ -227,10 +224,11 @@ def runPlagiarismDetector():
         checkForPlagiarism(n)
         os.remove(os.path.join(dataFolderPath,sampleDataFileName))
     
-    
 
     plotResults()
-    #plotCombinedResults()
+
+
+
 
 
 #Run Detector
