@@ -61,6 +61,36 @@ def plotResults():
     plt.title('Runtime of Rabin-Karp Algorithm')
     plt.show()
 
+
+    # Create data for plot 1
+    x = inputSizes
+    y1 = KMPElapsedTimes
+
+    # Create data for plot 2
+    y2 = LCSSElapsedTimes
+
+    # Create data for plot 3
+    y3 = RabinKarpElapsedTimes
+
+    # Plot all three plots on the same axes
+    plt.plot(x, y1, 'bo-', label='KMP')
+    plt.plot(x, y2, 'ro-', label='LCSS')
+    plt.plot(x, y3, 'go-', label='Rabin-Karp')
+
+    # Set x and y axis labels and title
+    plt.xlabel('Input size n')
+    plt.ylabel('Runtime (seconds)')
+    plt.title('Runtime of Plagiarism Detection Algorithms')
+
+    # Add a legend
+    plt.legend()
+
+    # Show the merged plot
+    plt.show()
+
+
+
+
 def createSampleCSV(n):
     global allDataDF
     global sampleDataDF
@@ -100,36 +130,36 @@ def checkForPlagiarism(n):
 
     print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    #threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
-    #threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
+    threadTwo = threading.Thread(target=startCheck, args=("KMP",))
+    threadThree = threading.Thread(target=startCheck, args=("KMP",))
 
     threadOneStartTime = time.time()
     threadOne.start()
 
-    # threadTwoStartTime = time.time()
-    # threadTwo.start()
+    threadTwoStartTime = time.time()
+    threadTwo.start()
 
-    # threadThreeStartTime = time.time()
-    # threadThree.start()
+    threadThreeStartTime = time.time()
+    threadThree.start()
 
     
     threadOne.join()
     threadOneEndTime = time.time()
-    
-    # threadTwoEndTime = time.time()
-    # threadTwo.join()
 
-    # threadThreeEndTime = time.time()
-    # threadThree.join()
+    threadTwo.join()
+    threadTwoEndTime = time.time()
+
+    threadThree.join()
+    threadThreeEndTime = time.time()
 
     threadOneElapsedTime = threadOneEndTime - threadOneStartTime
     KMPElapsedTimes.append(threadOneElapsedTime)
 
-    # threadTwoElapsedTime = threadTwoEndTime - threadTwoStartTime
-    # KMPElapsedTimes.append(threadTwoElapsedTime)
+    threadTwoElapsedTime = threadTwoEndTime - threadTwoStartTime
+    LCSSElapsedTimes.append(threadTwoElapsedTime)
 
-    # threadThreeElapsedTime = threadThreeEndTime - threadThreeStartTime
-    # KMPElapsedTimes.append(threadThreeElapsedTime)
+    threadThreeElapsedTime = threadThreeEndTime - threadThreeStartTime
+    RabinKarpElapsedTimes.append(threadThreeElapsedTime)
 
 
 
