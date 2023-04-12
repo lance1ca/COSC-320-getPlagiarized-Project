@@ -5,6 +5,7 @@ import emoji
 import time
 import traceback
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 elapsed_times = []
@@ -54,65 +55,94 @@ def initializePlagiarizedData(percentage):
 def checkForPlagiarism(version):
     combinedDF = pd.read_csv("./data/COMBINED.csv",encoding='utf-8')
     plagiarizedDF = pd.read_csv("./data/PLAGIARIZED.csv",encoding='utf-8')
-    combinedDF = combinedDF.to_dict('records')
-    plagiarizedDF = plagiarizedDF.to_dict('records')
+    
 
     global errcount 
     global start_plot_time
     start_plot_time = time.perf_counter()
-    if(version == "rk"):
+    
+    if version == "rknum":
+        cnump = combinedDF.to_numpy()
+        pnump = plagiarizedDF.to_numpy()
+        # combinedDF = dict(zip(combinedDF.columns, list(range(0,len(combinedDF.columns)))))
+        # plagiarizedDF = dict(zip(plagiarizedDF.columns, list(range(0,len(plagiarizedDF.columns)))))
+                       
+        for crow in cnump:
+            for prow in pnump:
+                    try:
+                        matched = karpAlgo(prow[2],crow[2],13)
+                        if(matched):
+                            print("og text: "+crow[2])
+                            print("stolen text; "+prow[2])
+                            print(matched)
+                            
+                    except Exception as e:
+                        # print(e)
+                        errcount += 1
+    if version == "KMP":
+        cnump = combinedDF.to_numpy()
+        pnump = plagiarizedDF.to_numpy()
+        # combinedDF = dict(zip(combinedDF.columns, list(range(0,len(combinedDF.columns)))))
+        # plagiarizedDF = dict(zip(plagiarizedDF.columns, list(range(0,len(plagiarizedDF.columns)))))
+                       
+        for crow in cnump:
+            for prow in pnump:
+                    try:
+                        # matched = 
+                        KMPSearch(prow[2],crow[2])
+                        # if(matched):
+                        #     print("og text: "+crow[2])
+                        #     print("stolen text; "+prow[2])
+                        #     print(matched)
+                            
+                    except Exception as e:
+                        # print(e)
+                        errcount += 1
+                       
+    if(version == "rkpan"):
+        combinedDF = combinedDF.to_dict('records')
+        plagiarizedDF = plagiarizedDF.to_dict('records')
         for plagiarizedRow in plagiarizedDF:
             for originalRow in combinedDF:
                     
                     try:
-                        # currOriginalUserName = originalRow['userName']
-                        # currOriginalRequestId = originalRow['reviewId']
-                        # currOriginalContent = originalRow['content']
-
-                        # currPlagiarizedRowUserName = plagiarizedRow['userName']
-                        # currPlagiarizedRequestId = plagiarizedRow['reviewId']
-                        # currPlagiarizedContent = plagiarizedRow['content']
-                        
                         matched = RabinKarpAlgo(plagiarizedRow['content'],originalRow['content'],101)
 
                         if(matched):
-                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['reviewId'],originalRow['content']))
-                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['reviewId'],plagiarizedRow['content']))
+                            print("Original text from \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['content']))
+                            print("Plagiarized text from \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['content']))
                             print("\n")
                             
-
                     except Exception as e:
-                        # print("An Error Occurred :(")
                         # print(e)
-                        
                         errcount += 1
-                        #traceback.print_exc()
+                       
                         
-    if(version == "KMP"):
+    # if(version == "KMP"):
         
-        for plagiarizedRow in plagiarizedDF:
-            for originalRow in combinedDF:
+    #     for plagiarizedRow in plagiarizedDF:
+    #         for originalRow in combinedDF:
                     
-                    try:
-                        # currOriginalUserName = originalRow['userName']
-                        # currOriginalRequestId = originalRow['reviewId']
-                        # currOriginalContent = originalRow['content']
+    #                 try:
+    #                     # currOriginalUserName = originalRow['userName']
+    #                     # currOriginalRequestId = originalRow['reviewId']
+    #                     # currOriginalContent = originalRow['content']
 
-                        # currPlagiarizedRowUserName = plagiarizedRow['userName']
-                        # currPlagiarizedRequestId = plagiarizedRow['reviewId']
-                        # currPlagiarizedContent = plagiarizedRow['content']
+    #                     # currPlagiarizedRowUserName = plagiarizedRow['userName']
+    #                     # currPlagiarizedRequestId = plagiarizedRow['reviewId']
+    #                     # currPlagiarizedContent = plagiarizedRow['content']
                         
-                        matched = KMPSearch(plagiarizedRow['content'],originalRow['content'])
+    #                     matched = KMPSearch(plagiarizedRow['content'],originalRow['content'])
 
-                        if(matched):
-                            print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['reviewId'],originalRow['content']))
-                            print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['reviewId'],plagiarizedRow['content']))
-                            print("\n")
+    #                     if(matched):
+    #                         print("Original text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(originalRow['userName'],originalRow['reviewId'],originalRow['content']))
+    #                         print("Plagiarized text from \"{}\", \nwith requestId = \"{}\", \ntext = \"{}: \"".format(plagiarizedRow['userName'],plagiarizedRow['reviewId'],plagiarizedRow['content']))
+    #                         print("\n")
 
-                    except Exception as e:
-                        print("An Error Occurred :(")
-                        print(e)
-                        #traceback.print_exc()
+    #                 except Exception as e:
+    #                     print("An Error Occurred :(")
+    #                     print(e)
+    #                     #traceback.print_exc()
                         
     global end_plot_time
     end_plot_time = time.perf_counter()
@@ -268,6 +298,49 @@ def RabinKarpAlgo(pattern, text, primeNum):
 
 
 
+d = 10
+def karpAlgo(pattern, text, q):
+    m = len(pattern)
+    n = len(text)
+    p = 0
+    t = 0
+    h = 1
+    i = 0
+    j = 0
+
+    for i in range(m-1):
+        h = (h*d) % q
+
+    # Calculate hash value for pattern and text
+    for i in range(m):
+        p = (d*p + ord(pattern[i])) % q
+        t = (d*t + ord(text[i])) % q
+
+    # Find the match
+    for i in range(n-m+1):
+        if p == t:
+            for j in range(m):
+                if text[i+j] != pattern[j]:
+                    break
+
+            j += 1
+            if j == m:
+                print("Pattern is found at position: " + str(i+1))
+                global count 
+                count += 1
+                print("DETECTION #", count)
+                return True
+
+        if i < n-m:
+            t = (d*(t-ord(text[i])*h) + ord(text[i+m])) % q
+
+            if t < 0:
+                t = t+q
+
+
+
+
+
 if os.path.exists("./data/COMBINED.csv"):
     os.remove("./data/COMBINED.csv")
 
@@ -279,7 +352,8 @@ initializeData()
 
 n_percent_values = [0.1,0.2,0.3,0.4,0.5]
 n_values = []
-# version = "rk"                                                 #change  ***IMPORTANT***
+# version = "rknum"                                                 #change  ***IMPORTANT***
+# version = "rkpan"                                                 #change  ***IMPORTANT***
 version = "KMP"                                                 #change  ***IMPORTANT***
 errcount = 0
 for n in n_percent_values:
@@ -296,7 +370,7 @@ if version == "rk":
     print("the error count is " + str(errcount))
 
 print("Elapsed time: {:.2f} seconds".format(elapsed_time))
-
+print("avg time per detection is "+ str(elapsed_time/count) + " seconds")
     
 # Plot the results
 plt.plot(n_values, elapsed_times, 'bo-')

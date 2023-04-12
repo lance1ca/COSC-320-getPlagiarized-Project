@@ -314,7 +314,8 @@ initializeData()
 n_percent_values = [0.1,0.2,0.3,0.4,0.5]
 n_values = []
 # version = "rk"                                                 #change  ***IMPORTANT***
-version = "KMP"                                                 #change  ***IMPORTANT***
+# version = "KMP"                                                 #change  ***IMPORTANT***
+version = "LCSS"                                                 #change  ***IMPORTANT***
 errcount = 0
 for n in n_percent_values:
     n_values.append(initializePlagiarizedData(n))
