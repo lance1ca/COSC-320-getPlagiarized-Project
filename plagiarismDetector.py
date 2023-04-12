@@ -12,6 +12,9 @@ from RabinKarp import RabinKarp
 #Global Variables:
 allDataDF = pd.DataFrame()
 sampleDataDF = pd.DataFrame()
+kmp_data_df = pd.DataFrame()
+lcss_data_df = pd.DataFrame()
+rabin_karp_data_df = pd.DataFrame()
 
 dataFolderPath = ""
 allDataFileName = 'masterData.csv'
@@ -99,37 +102,89 @@ def createSampleCSV(n):
     inputSizes.append(sampleDataDF.shape[0])
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
-def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
-    # print("-------------------------------------")
-    # print(algorithmType +": \n")
-    # print(sampleRow)
-    # print(combinedRow)
-    # print("-------------------------------------")
+#----------------------------------------------------------------------------------------
+
+# def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
+#     # print("-------------------------------------")
+#     # print(algorithmType +": \n")
+#     # print(sampleRow)
+#     # print(combinedRow)
+#     # print("-------------------------------------")
     
-    if algorithmType == "KMP":
+#     if algorithmType == "KMP":
+#         kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
+#     elif algorithmType == "LCSS":
+#         lcss.lcs(str(sampleRow[2]), str(combinedRow[2]))
+#     elif algorithmType == "Rabin-Karp":
+#         rabinKarp.RabinKarpAlgo(str(sampleRow[2]), str(combinedRow[2]),101)
+#     else:
+#         print("Algorithm type passed was invalid")
+
+# def iterateSampleRow(sampleRow,algorithmType):
+#     allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow,algorithmType),axis=1)
+
+# def startCheck(algorithmType):
+#     sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
+
+
+
+#KMP
+def iterateCombinedRowKMP(sampleRow, combinedRow):
         kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
-    elif algorithmType == "LCSS":
+    
+
+def iterateSampleRowKMP(sampleRow):
+    kmp_data_df.apply(lambda combinedRow: iterateCombinedRowKMP(sampleRow,combinedRow),axis=1)
+
+def startCheckKMP():
+    sampleDataDF.apply(lambda sampleRow: iterateSampleRowKMP(sampleRow),axis=1)
+
+#LCSS
+
+def iterateCombinedRowLCSS(sampleRow, combinedRow):
         lcss.lcs(str(sampleRow[2]), str(combinedRow[2]))
-    elif algorithmType == "Rabin-Karp":
+    
+
+def iterateSampleRowLCSS(sampleRow):
+    lcss_data_df.apply(lambda combinedRow: iterateCombinedRowLCSS(sampleRow,combinedRow),axis=1)
+
+def startCheckLCSS():
+    sampleDataDF.apply(lambda sampleRow: iterateSampleRowLCSS(sampleRow),axis=1)
+
+#Rabin Karp
+def iterateCombinedRowRabinKarp(sampleRow, combinedRow):
         rabinKarp.RabinKarpAlgo(str(sampleRow[2]), str(combinedRow[2]),101)
-    else:
-        print("Algorithm type passed was invalid")
+    
 
-def iterateSampleRow(sampleRow,algorithmType):
-    allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow,algorithmType),axis=1)
+def iterateSampleRowRabinKarp(sampleRow):
+    rabin_karp_data_df.apply(lambda combinedRow: iterateCombinedRowRabinKarp(sampleRow,combinedRow),axis=1)
 
-def startCheck(algorithmType):
-    sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
+def startCheckRabinKarp():
+    sampleDataDF.apply(lambda sampleRow: iterateSampleRowRabinKarp(sampleRow),axis=1)
+
+
+
+#------------------------------------------------------------------------------------------
 
 def checkForPlagiarism(n):
     global KMPElapsedTimes
     global LCSSElapsedTimes
     global RabinKarpElapsedTimes
+    global allDataDF
+
+    global kmp_data_df
+    global lcss_data_df
+    global rabin_karp_data_df
+
+    # Create separate dataframes for each thread
+    kmp_data_df = allDataDF.copy(deep=True)
+    lcss_data_df = allDataDF.copy(deep=True)
+    rabin_karp_data_df = allDataDF.copy(deep=True)
 
     print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
-    threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
-    threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
+    threadOne = threading.Thread(target=startCheckKMP)
+    threadTwo = threading.Thread(target=startCheckRabinKarp)
+    threadThree = threading.Thread(target=startCheckLCSS)
 
     threadOneStartTime = time.time()
     threadOne.start()
@@ -154,10 +209,10 @@ def checkForPlagiarism(n):
     KMPElapsedTimes.append(threadOneElapsedTime)
 
     threadTwoElapsedTime = threadTwoEndTime - threadTwoStartTime
-    LCSSElapsedTimes.append(threadTwoElapsedTime)
+    RabinKarpElapsedTimes.append(threadTwoElapsedTime)
 
     threadThreeElapsedTime = threadThreeEndTime - threadThreeStartTime
-    RabinKarpElapsedTimes.append(threadThreeElapsedTime)
+    LCSSElapsedTimes.append(threadThreeElapsedTime)
 
 
 

@@ -1,5 +1,6 @@
 # Dynamic Programming implementation of LCS problem
-
+# https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
+# This code is contributed by Nikhil Kumar Singh(nickzuck_007)
 class LCSS:
     count = 0
     def __init__(self):
@@ -36,5 +37,3 @@ class LCSS:
             print("Plagiarized Text: " + Y + "\n")
             print("--------------------------------------")
     
- 
-# This code is contributed by Nikhil Kumar Singh(nickzuck_007)
