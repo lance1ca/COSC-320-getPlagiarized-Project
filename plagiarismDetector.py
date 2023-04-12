@@ -15,7 +15,7 @@ sampleDataDF = pd.DataFrame()
 
 dataFolderPath = ""
 allDataFileName = 'masterData.csv'
-sampleDataFileName = 'sampleDataa.csv'
+sampleDataFileName = 'sampleData.csv'
 
 kmp = KMP()
 lcss = LCSS()
@@ -109,7 +109,7 @@ def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
     if algorithmType == "KMP":
         kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
     elif algorithmType == "LCSS":
-        lcss.LCSS(str(sampleRow[2]), str(combinedRow[2]))
+        lcss.lcs(str(sampleRow[2]), str(combinedRow[2]))
     elif algorithmType == "Rabin-Karp":
         rabinKarp.RabinKarpAlgo(str(sampleRow[2]), str(combinedRow[2]),101)
     else:
@@ -128,7 +128,7 @@ def checkForPlagiarism(n):
 
     print("Checking for Plagiarism for n percentage: " + str(n*100) +"%.")
     threadOne = threading.Thread(target=startCheck, args=("KMP",))
-    threadTwo = threading.Thread(target=startCheck, args=("KMP",))
+    threadTwo = threading.Thread(target=startCheck, args=("LCSS",))
     threadThree = threading.Thread(target=startCheck, args=("Rabin-Karp",))
 
     threadOneStartTime = time.time()
