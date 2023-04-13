@@ -49,7 +49,7 @@ def plotResults():
 
     print(inputSizes)
     print(LCSSElapsedTimes)
-    plt.plot(inputSizes, LCSSElapsedTimes, 'bo-')
+    plt.plot(inputSizes, LCSSElapsedTimes, 'ro-')
     plt.xlabel('Input size n')
     plt.ylabel('Runtime (seconds)')
     plt.title('Runtime of LCSS Algorithm')
@@ -58,7 +58,7 @@ def plotResults():
 
     print(inputSizes)
     print(RabinKarpElapsedTimes)
-    plt.plot(inputSizes, RabinKarpElapsedTimes, 'bo-')
+    plt.plot(inputSizes, RabinKarpElapsedTimes, 'go-')
     plt.xlabel('Input size n')
     plt.ylabel('Runtime (seconds)')
     plt.title('Runtime of Rabin-Karp Algorithm')
@@ -102,31 +102,6 @@ def createSampleCSV(n):
     inputSizes.append(sampleDataDF.shape[0])
     sampleDataDF.to_csv(os.path.join(dataFolderPath,sampleDataFileName), index=False)
 
-#----------------------------------------------------------------------------------------
-
-# def iterateCombinedRow(sampleRow, combinedRow,algorithmType):
-#     # print("-------------------------------------")
-#     # print(algorithmType +": \n")
-#     # print(sampleRow)
-#     # print(combinedRow)
-#     # print("-------------------------------------")
-    
-#     if algorithmType == "KMP":
-#         kmp.KMPSearch(str(sampleRow[2]), str(combinedRow[2]))
-#     elif algorithmType == "LCSS":
-#         lcss.lcs(str(sampleRow[2]), str(combinedRow[2]))
-#     elif algorithmType == "Rabin-Karp":
-#         rabinKarp.RabinKarpAlgo(str(sampleRow[2]), str(combinedRow[2]),101)
-#     else:
-#         print("Algorithm type passed was invalid")
-
-# def iterateSampleRow(sampleRow,algorithmType):
-#     allDataDF.apply(lambda combinedRow: iterateCombinedRow(sampleRow,combinedRow,algorithmType),axis=1)
-
-# def startCheck(algorithmType):
-#     sampleDataDF.apply(lambda sampleRow: iterateSampleRow(sampleRow,algorithmType),axis=1)
-
-
 
 #KMP
 def iterateCombinedRowKMP(sampleRow, combinedRow):
@@ -162,9 +137,6 @@ def iterateSampleRowRabinKarp(sampleRow):
 def startCheckRabinKarp():
     sampleDataDF.apply(lambda sampleRow: iterateSampleRowRabinKarp(sampleRow),axis=1)
 
-
-
-#------------------------------------------------------------------------------------------
 
 def checkForPlagiarism(n):
     global KMPElapsedTimes
@@ -242,9 +214,9 @@ def plagiarismDetectorInitialization(n):
     global sampleDataDF
 
     if os.name == 'nt':  # Windows
-        dataFolderPath = '.\\test'   # Use backslash for Windows
+        dataFolderPath = '.\\testData'   # Use backslash for Windows
     else:  # Mac or Linux
-        dataFolderPath = './data'   # Use forward slash for Mac or Linux
+        dataFolderPath = './testData'   # Use forward slash for Mac or Linux
 
     #Create the combined csv file if it does not exist
     if (not (os.path.exists(os.path.join(dataFolderPath,allDataFileName)))):

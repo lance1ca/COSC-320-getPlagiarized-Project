@@ -29,11 +29,12 @@ class LCSS:
         if L[m][n] == 0:
             print("LCSS Detection: There were no similarities. I.e, there was no common subsequence.")
         elif L[m][n] == m and L[m][n] == n:
-            print("--------------------------------------\n")
+            pass
+            # print("--------------------------------------\n")
             self.count += 1
             print("LCSS Detection #", self.count)
-            print("Longest Common Subsequence: " + str(L[m][n]))
-            print("Original Text: " + X + "\n")
-            print("Plagiarized Text: " + Y + "\n")
-            print("--------------------------------------")
+            # print("Longest Common Subsequence: " + str(L[m][n]))
+            # print("Original Text: " + X + "\n")
+            # print("Plagiarized Text: " + Y + "\n")
+            # print("--------------------------------------")
     
