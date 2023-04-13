@@ -18,7 +18,7 @@ Please refer to the output plots that show the runtime of each algorithm (KMP, L
 ## Build and Execution Instructions
 1. Ensure you have Python 3.x installed and the required libraries (pandas, matplotlib.pyplot, os, time, and threading).
 2. Place the KMP.py, LCSS.py, RabinKarp.py, and PlagiarismDetector.py files in the same directory.
-3. Create a /data folder in the same directory containing the text dataset to be analyzed.
+3. Create a /testData folder in the same directory containing the dataset to be analyzed and worked with .csv files.
 4. Run the PlagiarismDetector.py file to execute the plagiarism detector.
 5. The results will be displayed as plots and printed in the console.
 
