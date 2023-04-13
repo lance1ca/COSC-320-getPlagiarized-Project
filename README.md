@@ -20,7 +20,7 @@ Please refer to the output plots that show the runtime of each algorithm (KMP, L
 2. Place the KMP.py, LCSS.py, RabinKarp.py, and PlagiarismDetector.py files in the same directory.
 3. Create a /data folder in the same directory containing the text dataset to be analyzed.
 4. Run the PlagiarismDetector.py file to execute the plagiarism detector.
-5. he results will be displayed as plots and printed in the console.
+5. The results will be displayed as plots and printed in the console.
 
 ![KMP_Detection_Output](https://user-images.githubusercontent.com/113868682/231638970-61eb7f84-418d-48ed-a823-797fbb2e3fed.png)
 
