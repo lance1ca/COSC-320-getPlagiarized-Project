@@ -21,21 +21,26 @@ Please refer to the output plots that show the runtime of each algorithm (KMP, L
 3. Create a /data folder in the same directory containing the text dataset to be analyzed.
 4. Run the PlagiarismDetector.py file to execute the plagiarism detector.
 5. he results will be displayed as plots and printed in the console.
+
 ![KMP_Detection_Output](https://user-images.githubusercontent.com/113868682/231638970-61eb7f84-418d-48ed-a823-797fbb2e3fed.png)
 
 ## Code Overview
+
 ![COMBINEDPLOTSECONDS](https://user-images.githubusercontent.com/113868682/231639275-070b55f3-d94e-4863-978a-c07dd71372aa.png)
 
 ### KMP.py
 This module implements the Knuth-Morris-Pratt algorithm, which is used to search for a pattern in a given text in linear time. The main search function is KMPSearch, which uses the computeLPSArray function to preprocess the pattern and create an LPS (Longest Proper Prefix which is also a suffix) array to optimize the search.
+
 ![KMPPLOTSECONDS](https://user-images.githubusercontent.com/113868682/231639209-17b27414-8e80-475f-b50d-0183ff14b68f.png)
 
 ### LCSS.py
 This module implements the Longest Common Subsequence problem using dynamic programming. The main function is lcs, which takes two strings as input and calculates the longest common subsequence between them. A 2D array L is used to store the lengths of the longest common subsequences for different substrings of the input strings.
+
 ![LCSSPLOTSECONDS](https://user-images.githubusercontent.com/113868682/231639161-04fbea03-f05f-47a3-a927-4e341a714a4e.png)
 
 ### RabinKarp.py
 This module implements the Rabin-Karp algorithm, which is another pattern searching algorithm. The main function is RabinKarpAlgo, which takes the pattern, text, and a prime number as input. It calculates hash values for the pattern and substrings of the text and compares them to find matches. The rolling hash technique is used to efficiently compute the hash values for the text substrings.
+
 ![RABINKARPPLOTSECONDS](https://user-images.githubusercontent.com/113868682/231639120-5a930593-044c-48bc-bab0-279e13fbebc8.png)
 
 ### PlagiarismDetector.py
