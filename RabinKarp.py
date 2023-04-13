@@ -1,3 +1,9 @@
+# COSC 320 - Term Project
+# Group Members Chad Lantz (77879460), Prashant Dutt (63565634), Lance Rogan (62708938)
+# Note: We have also added our own code / print statements to adjust the provided code taken from GeeksForGeeks to our usage.
+
+# **** PLEASE READ ****
+# Python3 program for Rabin Karp Algorithm
 # Following program is the python implementation of
 # Rabin Karp Algorithm given in CLRS book
 # This code is contributed by Bhavya Jain
@@ -40,12 +46,12 @@ class RabinKarp:
                     else:
                         j += 1
                 if j == M:
-                    # print("--------------------------------------\n")
+                    print("--------------------------------------\n")
                     self.count += 1
                     print("Rabin-Karp Detection #", self.count)
-                    # print("Original Text: " + text + "\n")
-                    # print("Plagiarized Text: " + pattern + "\n")
-                    # print("--------------------------------------")
+                    print("Original Text: " + text + "\n")
+                    print("Plagiarized Text: " + pattern + "\n")
+                    print("--------------------------------------")
             if i < N-M:
                 textHashValue = (numOfInputChars*(textHashValue-ord(text[i])*h) + ord(text[i+M])) % primeNum
                 if textHashValue < 0:

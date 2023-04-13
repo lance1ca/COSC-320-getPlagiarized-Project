@@ -1,6 +1,14 @@
+# COSC 320 - Term Project
+# Group Members Chad Lantz (77879460), Prashant Dutt (63565634), Lance Rogan (62708938)
+# Note: We have also added our own code / print statements to adjust the provided code taken from GeeksForGeeks to our usage.
+
+# **** PLEASE READ ****
+# Python3 program for LCSS Algorithm
 # Dynamic Programming implementation of LCS problem
 # https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
 # This code is contributed by Nikhil Kumar Singh(nickzuck_007)
+
+#Creating a class for LCSS to run algorithm
 class LCSS:
     count = 0
     def __init__(self):
@@ -30,11 +38,11 @@ class LCSS:
             print("LCSS Detection: There were no similarities. I.e, there was no common subsequence.")
         elif L[m][n] == m and L[m][n] == n:
             pass
-            # print("--------------------------------------\n")
+            print("--------------------------------------\n")
             self.count += 1
             print("LCSS Detection #", self.count)
-            # print("Longest Common Subsequence: " + str(L[m][n]))
-            # print("Original Text: " + X + "\n")
-            # print("Plagiarized Text: " + Y + "\n")
-            # print("--------------------------------------")
+            print("Longest Common Subsequence: " + str(L[m][n]))
+            print("Original Text: " + X + "\n")
+            print("Plagiarized Text: " + Y + "\n")
+            print("--------------------------------------")
     
