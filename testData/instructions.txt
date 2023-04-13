@@ -1,2 +1,3 @@
 Hello! Here is where you should add in your select number of csv files from the private dataset provided via a link in our report.
-Please go to this link and download a select number of csv data files and place them in here to run the program.
+Please go to this link and download a select number of csv data files and place them in here to run the program. 
+This is not necessary, but PLEASE DELETE THIS FILE AFTER YOU HAVE ADDED IN THE DATA AND THIS IS NO LONGER NEEDED.
