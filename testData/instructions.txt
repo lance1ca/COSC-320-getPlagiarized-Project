@@ -1,0 +1,2 @@
+Hello! Here is where you should add in your select number of csv files from the private dataset provided via a link in our report.
+Please go to this link and download a select number of csv data files and place them in here to run the program.
